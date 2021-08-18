@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS crisis_lines;
+
+CREATE TABLE crisis_lines(
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    county TEXT NOT NULL,
+    info TEXT NOT NULL
+);
