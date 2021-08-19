@@ -9,14 +9,20 @@ function scrapeResources(URL) {
 
     const $ = cheerio.load(body);
 
-    const county = $('p > strong > a').toArray();
+    const counties = $('p > strong > a').toArray();
+    const numbers = $('p > strong').toArray();
 
-    const mappedCounties = county.map(place => {
+    const mappedCounties = counties.map(place => {
       return place.children[0].data;
       console.log('this is a place!', place);
     });
 
-    console.log(mappedCounties);
+    const mappedNumbers = numbers.map(number => {
+      return number.children[1].data;
+      // console.log('this is a number!', mappedNumbers);
+    });
+
+    console.log(mappedNumbers);
 
     const info = 'strong';
 
