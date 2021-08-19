@@ -22,21 +22,25 @@ function scrapeResources(URL) {
       // console.log('this is a number!', mappedNumbers);
     });
 
-    console.log(mappedNumbers);
+    console.log(mappedNumbers, mappedCounties);
 
-    const info = 'strong';
+    const data = {
+      county: mappedCounties.forEach(item => data.push(item)),
+      info: mappedNumbers.forEach(item => data.push(item)) 
+    };
+    console.log(data);
 
-    $(county, info).each(
-      function () {
-        if (this) {
-          const resource = {};
-          resource.county = this.county;
-          resource.info = this.info;
-          MHCrisis.insert(resource);
-          console.log(resource);
-        }
-      }
-    );
+    // $(mappedCounties, mappedNumbers).each(
+    //   function () {
+    //     if (this) {
+    //       const resource = {};
+    //       resource.county = this.mappedCounties;
+    //       resource.info = this.mappedNumbers;
+    //       MHCrisis.insert(resource);
+    //       console.log(resource);
+    //     }
+    //   }
+    // );
   });
 }
   
