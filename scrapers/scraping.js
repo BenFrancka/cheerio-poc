@@ -1,37 +1,47 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import request from 'request';
 import cheerio from 'cheerio';
 
 import MHCrisis from '../lib/models/MH.js';
 
-function scrapeResources(URL) {
-  request(URL, (err, response, body) => {
+export function scrapeResources(URL) {
+  request(URL, async (err, response, body) => {
     if (err) console.error(err);
 
     const $ = cheerio.load(body);
 
-    const county = $('p > strong > a').toArray();
+    const counties = $('p > strong > a').toArray();
+    const numbers = $('p > strong').toArray();
 
-    const mappedCounties = county.map(place => {
+    const mappedCounties = counties.map(place => {
       return place.children[0].data;
-      console.log('this is a place!', place);
     });
 
-    console.log(mappedCounties);
+    const mappedNumbers = numbers.map(number => {
+      return number.children[1].data;
+    });
 
-    const info = 'strong';
+    
 
-    $(county, info).each(
-      function () {
-        if (this) {
-          const resource = {};
-          resource.county = this.county;
-          resource.info = this.info;
-          MHCrisis.insert(resource);
-          console.log(resource);
-        }
-      }
+    const data = mappedCounties.map((county, index) => {
+      const result = {};
+      result.county = county;
+      result.info = mappedNumbers[index];
+      return result;
+    });
+
+   
+    //await MHCrisis.insert(data);
+    Promise.all(
+      data.map(async result => {
+        return MHCrisis.insert(result);
+      }) 
     );
+    const table = await MHCrisis.getAll();
+    console.log(table);
   });
+  console.log(process.env.DATABASE_URL);
 }
   
 scrapeResources('https://namior.org/resources/community-resource-lists/county-mental-health-departments/');
