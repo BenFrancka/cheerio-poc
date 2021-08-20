@@ -1,0 +1,1 @@
+SELECT * FROM mh_crisis_lines;
